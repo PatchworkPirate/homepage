@@ -19,7 +19,7 @@ app.get("/", function (req, res) {
 const ports = SerialPort.list().then(function (ports) {
   console.log(ports);
   ports.forEach(function (option) {
-    if (option.productId === "805A") {
+    if (option.productId === "805a") {
       const port = new SerialPort({
         path: option.path,
         baudRate: 9600,
@@ -40,5 +40,5 @@ const ports = SerialPort.list().then(function (ports) {
 });
 
 app.listen(4000, function () {
-  console.log("server running on 3000");
+  console.log("server running on 4000");
 });
