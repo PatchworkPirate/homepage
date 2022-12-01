@@ -39,6 +39,6 @@ const ports = SerialPort.list().then(function (ports) {
   });
 });
 
-app.listen(3000, function () {
+app.listen(4000, function () {
   console.log("server running on 3000");
 });
