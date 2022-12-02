@@ -1,9 +1,11 @@
 body {
-    background-image: url("https://png.pngtree.com/background/20210712/original/pngtree-modern-double-color-futuristic-neon-background-picture-image_1181573.jpg");
+    background: no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
     background-size: cover;
 }
 
-.stat {
-    background-color: white;
-    box-shadow: white;
+header {
+    font-size: 12pt;
 }

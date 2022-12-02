@@ -1,23 +1,34 @@
-const express = require("express");
-const { SerialPort } = require("serialport");
-const { ReadlineParser } = require("@serialport/parser-readline");
+import express, { response } from "express";
+import { SerialPort } from "serialport";
+import { ReadlineParser } from "serialport";
+import { createApi } from 'unsplash-js';
+import * as dotenv from "dotenv";
+dotenv.config()
+
+const unsplash = createApi({
+  accessKey: process.env.ACCESS_KEY,
+  fetch: fetch,
+});
+
+console.log(process.env.ACCESS_KEY)
 
 let temp = 0;
 let humidity = 0;
 let portPath = "";
+let imgUrl
 
 const app = express();
 
 app.set(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-app.use(express.static(__dirname + "/public"));
+app.use(express.static("public"));
 
 app.get("/", function (req, res) {
-  res.render("home", { temp: temp, humidity: humidity });
+  const date = new Date()
+  res.render("home", { temp: temp, humidity: humidity, background: imgUrl, date:date });
 });
 
 const ports = SerialPort.list().then(function (ports) {
-  console.log(ports);
   ports.forEach(function (option) {
     if (option.productId === "805a") {
       const port = new SerialPort({
@@ -32,12 +43,22 @@ const ports = SerialPort.list().then(function (ports) {
 
       parser.on("data", function (data) {
         data = JSON.parse(data);
-        temp = data.temperature + "";
-        humidity = data.humidity + "%";
+        temp = data.temperature;
+        humidity = data.humidity;
       });
     }
   });
 });
+
+async function getBackground() {
+    unsplash.photos.getRandom().then((response) => {
+      imgUrl = response.response.urls.regular;
+    })
+
+    setTimeout(getBackground, (1000*60*60*24));
+};
+
+getBackground();
 
 app.listen(4000, function () {
   console.log("server running on 4000");

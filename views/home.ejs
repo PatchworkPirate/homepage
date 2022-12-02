@@ -18,24 +18,42 @@
     />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <div class="container-fluid">
-      <div class="row mt-3 mb-3 w-25 rounded-pill shadow stat">
-        <div class="col-1">
-          <h1><i class="bi bi-thermometer-half"></i></h1>
-        </div>
-        <div class="col-11 text-center">
-            <h1><%= temp %>°C</h1>
-          </div>
+  <body class="h-100 w-100 overflow-hidden" style="background-image: url('<%= background %>')">
+    <header class="row text-bg-light opacity-75">
+
+      <!-- Temp and Humidity Reading -->
+      <% humidity=65.54 %> 
+      <% temp=21.51 %> 
+
+      <div class="col-sm-12 col-md-2 row text-center pe-0">
+        <strong
+          class="col-6 align-middle"
+          ><i class="bi bi-thermometer-half me-2"></i
+          ><span><%= temp %>°C</span></strong
+        >
+
+      <% if (humidity < 55) { %>
+        <strong class="col-6 align-middle">
+      <% } else if (humidity < 65) { %>
+        <strong class="col-6 bg-warning align-middle">
+      <% } else if (humidity >= 65) { %>
+        <strong class="col-6 bg-danger text-light align-middle">
+      <% } %>
+       
+      <i class="bi bi-cloud-haze2"></i><span>  <%= humidity %>%</span></strong>
+    </div>
+
+    <!-- Date & Time -->
+    <div class="col-sm-12 col-md-10 row">
+      <div class="col text-center align-items-center"><strong class=""><%= date %> </strong></div></div>
+    </header>
+
+    <!-- Notification Box -->
+    <div class="row my-5 justify-content-center">
+      <div class="col-8 bg-light text-center rounded-3">
+        Hello World
       </div>
-      <div class="row mt-3 mb-3 w-25 rounded-pill shadow stat">
-        <div class="col-1">
-          <h1><i class="bi bi-cloud-haze2"></i></h1>
-        </div>
-        <div class="col-11 text-center">
-            <h1><%= humidity %></h1>
-          </div>
-      </div>
+      
     </div>
   </body>
   <!-- JavaScript Bundle with Popper -->
