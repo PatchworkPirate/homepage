@@ -43,7 +43,7 @@
 
     <!-- Date & Time -->
     <div class="col-sm-12 col-md-10 row">
-      <div class="col text-center align-items-center"><strong class=""><%= date %> </strong></div></div>
+      <div class="col text-center align-items-center"><strong class="" id="dateTime"></strong></div></div>
     </header>
 
     <!-- Notification Box -->
@@ -60,4 +60,17 @@
     integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
     crossorigin="anonymous"
   ></script>
+  <script>
+    function updateTime() {
+      const date = new Date()
+      const format = new Intl.DateTimeFormat('en-DE', {
+        dateStyle:"full",
+        timeStyle:"long"
+      })
+      const renderDate = format.format(date)
+      document.getElementById("dateTime").innerHTML = renderDate
+      setTimeout(updateTime, 1000);
+    }
+    updateTime();
+  </script>
 </html>

@@ -24,8 +24,7 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 app.get("/", function (req, res) {
-  const date = new Date()
-  res.render("home", { temp: temp, humidity: humidity, background: imgUrl, date:date });
+  res.render("home", { temp: temp, humidity: humidity, background: imgUrl});
 });
 
 const ports = SerialPort.list().then(function (ports) {
