@@ -18,40 +18,36 @@
     />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="h-100 w-100" style="background-image: url('<%= background %>')">
+  <body
+    class="h-100 w-100"
+    style="background-image: url('https://picsum.photos/1920/1080')"
+  >
     <header class="row text-bg-light opacity-75">
-
       <!-- Temp and Humidity Reading -->
 
       <div class="col-sm-12 col-md-2 row text-center pe-0">
-        <strong
-          class="col-6 align-middle"
+        <strong class="col-6 align-middle"
           ><i class="bi bi-thermometer-half me-2"></i
-          ><span><%= temp %>°C</span></strong
+          ><span id="temp">0°C</span></strong
         >
 
-      <% if (humidity < 55) { %>
         <strong class="col-6 align-middle">
-      <% } else if (humidity < 65) { %>
-        <strong class="col-6 bg-warning align-middle">
-      <% } else if (humidity >= 65) { %>
-        <strong class="col-6 bg-danger text-light align-middle">
-      <% } %>
-       
-      <i class="bi bi-cloud-haze2"></i><span>  <%= humidity %>%</span></strong>
-    </div>
+          <i class="bi bi-cloud-haze2 me-2"></i
+          ><span id="humidity">0%</span></strong
+        >
+      </div>
 
-    <!-- Date & Time -->
-    <div class="col-sm-12 col-md-10 row">
-      <div class="col text-center align-items-center"><strong class="" id="dateTime"></strong></div></div>
+      <!-- Date & Time -->
+      <div class="col-sm-12 col-md-10 row">
+        <div class="col text-center align-items-center">
+          <strong class="" id="dateTime"></strong>
+        </div>
+      </div>
     </header>
 
     <!-- Notification Box -->
     <div class="row my-5 justify-content-center">
-      <div class="col-8 bg-light text-center rounded-3">
-        Hello World
-      </div>
-      
+      <div class="col-8 bg-light text-center rounded-3">Hello World</div>
     </div>
   </body>
   <!-- JavaScript Bundle with Popper -->
@@ -61,16 +57,27 @@
     crossorigin="anonymous"
   ></script>
   <script>
-    function updateTime() {
-      const date = new Date()
-      const format = new Intl.DateTimeFormat('en-DE', {
-        dateStyle:"full",
-        timeStyle:"long"
-      })
-      const renderDate = format.format(date)
-      document.getElementById("dateTime").innerHTML = renderDate
-      setTimeout(updateTime, 1000);
+    async function getData() {
+      const req = await fetch("/api");
+      const data = await req.json();
+
+      document.getElementById("humidity").textContent = data.humidity + "°C";
+      document.getElementById("temp").textContent = data.temp + "%";
+
+      setTimeout(getData, 1000);
     }
-    updateTime();
+    function update() {
+      const date = new Date();
+      const format = new Intl.DateTimeFormat("en-DE", {
+        dateStyle: "full",
+        timeStyle: "long",
+      });
+      const renderDate = format.format(date);
+      document.getElementById("dateTime").innerHTML = renderDate;
+
+      setTimeout(update, 1000);
+    }
+    update();
+    getData();
   </script>
 </html>

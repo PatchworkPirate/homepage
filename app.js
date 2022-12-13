@@ -1,21 +1,21 @@
 import express, { response } from "express";
 import { SerialPort } from "serialport";
 import { ReadlineParser } from "serialport";
-import { createApi } from 'unsplash-js';
 import * as dotenv from "dotenv";
-dotenv.config()
+dotenv.config();
+import pg from "pg";
+const { Client } = pg;
+import http from 'http';
 
-const unsplash = createApi({
-  accessKey: process.env.ACCESS_KEY,
-  fetch: fetch,
-});
-
-console.log(process.env.ACCESS_KEY)
+const pgClient = new Client();
+await main();
+async function main() {
+  await pgClient.connect();
+}
 
 let temp = 0;
 let humidity = 0;
 let portPath = "";
-let imgUrl
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 app.get("/", function (req, res) {
-  res.render("home", { temp: temp, humidity: humidity, background: imgUrl});
+  res.render("home", { temp: temp, humidity: humidity });
 });
 
 const ports = SerialPort.list().then(function (ports) {
@@ -44,20 +44,27 @@ const ports = SerialPort.list().then(function (ports) {
         data = JSON.parse(data);
         temp = data.temperature;
         humidity = data.humidity;
+        pgClient.query(
+          "INSERT INTO readings (temp, humidity) VALUES ($1, $2);",
+          [temp, humidity],
+          function (err, res) {
+            console.log(err, res);
+          }
+        );
       });
     }
   });
 });
 
-async function getBackground() {
-    unsplash.photos.getRandom().then((response) => {
-      imgUrl = response.response.urls.regular;
-    })
-
-    setTimeout(getBackground, (1000*60*60*24));
-};
-
-getBackground();
+app.get("/api", function (req, res) {
+  pgClient.query(
+    `SELECT * FROM readings ORDER BY timestamp DESC LIMIT 1;`,
+    function (err, dbres) {
+      err && res.send(err);
+      res.send(dbres.rows[0]);
+    }
+  );
+});
 
 app.listen(4000, function () {
   console.log("server running on 4000");
