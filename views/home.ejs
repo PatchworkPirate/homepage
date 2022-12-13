@@ -26,14 +26,14 @@
       <!-- Temp and Humidity Reading -->
 
       <div class="col-sm-12 col-md-2 row text-center pe-0">
-        <strong class="col-6 align-middle"
+        <strong class="col-6 align-middle" id="temp"
           ><i class="bi bi-thermometer-half me-2"></i
-          ><span id="temp">0°C</span></strong
+          ><span id="temp-value">0°C</span></strong
         >
 
-        <strong class="col-6 align-middle">
+        <strong class="col-6 align-middle" id="humidity">
           <i class="bi bi-cloud-haze2 me-2"></i
-          ><span id="humidity">0%</span></strong
+          ><span id="humidity-value">0%</span></strong
         >
       </div>
 
@@ -61,8 +61,21 @@
       const req = await fetch("/api");
       const data = await req.json();
 
-      document.getElementById("humidity").textContent = data.humidity + "°C";
-      document.getElementById("temp").textContent = data.temp + "%";
+      let humidityHTML = document.getElementById("humidity")
+      let tempHTML = document.getElementById("temp")
+      let humidityVal = document.getElementById("humidity-value")
+      let tempVal = document.getElementById("temp-value")
+
+      if (data.humidity <= 55) {
+        humidityHTML.classList = ["col-6", "align-middle"]
+      } else if (data.humidity <= 60) {
+        humidityHTML.classList = ["col-6", "align-middle", "bg-warning"]
+      } else if (data.humidity > 60) {
+        humidityHTML.classList = ["col-6", "align-middle", "bg-danger", "text-light"]
+      }
+
+      humidityVal.textContent = data.humidity + "°C";
+      tempVal.textContent = data.temp + "%";
 
       setTimeout(getData, 1000);
     }
