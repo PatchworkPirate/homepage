@@ -66,11 +66,11 @@
       let humidityVal = document.getElementById("humidity-value")
       let tempVal = document.getElementById("temp-value")
 
-      if (data.humidity <= 55) {
+      if (data.humidity <= 60) {
         humidityHTML.classList = "col-6 align-middle"
-      } else if (data.humidity <= 60) {
+      } else if (data.humidity <= 65) {
         humidityHTML.classList = "col-6 align-middle bg-warning"
-      } else if (data.humidity > 60) {
+      } else if (data.humidity > 70) {
         humidityHTML.classList = "col-6 align-middle bg-danger text-light"
       }
 
