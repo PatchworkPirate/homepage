@@ -74,10 +74,9 @@
         humidityHTML.classList = "col-6 align-middle bg-danger text-light"
       }
 
-      humidityVal.textContent = data.humidity + "°C";
-      tempVal.textContent = data.temp + "%";
+      humidityVal.textContent = data.humidity + "%";
+      tempVal.textContent = data.temp + "°C";
 
-      setTimeout(getData, 1000);
     }
     function update() {
       const date = new Date();
@@ -88,9 +87,8 @@
       const renderDate = format.format(date);
       document.getElementById("dateTime").innerHTML = renderDate;
 
-      setTimeout(update, 1000);
     }
-    update();
-    getData();
+    setInterval(update, 1000);
+    setInterval(getData, 1000);
   </script>
 </html>
