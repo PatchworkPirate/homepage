@@ -47,8 +47,8 @@ const ports = SerialPort.list().then(function (ports) {
         pgClient.query(
           "INSERT INTO readings (temp, humidity) VALUES ($1, $2);",
           [temp, humidity],
-          function (err, res) {
-            console.log(err, res);
+          function (err) {
+            err ? console.log(err) : null;
           }
         );
       });
