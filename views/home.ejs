@@ -67,11 +67,11 @@
       let tempVal = document.getElementById("temp-value")
 
       if (data.humidity <= 55) {
-        humidityHTML.classList = ["col-6", "align-middle"]
+        humidityHTML.classList = "col-6 align-middle"
       } else if (data.humidity <= 60) {
-        humidityHTML.classList = ["col-6", "align-middle", "bg-warning"]
+        humidityHTML.classList = "col-6 align-middle bg-warning"
       } else if (data.humidity > 60) {
-        humidityHTML.classList = ["col-6", "align-middle", "bg-danger", "text-light"]
+        humidityHTML.classList = "col-6 align-middle bg-danger text-light"
       }
 
       humidityVal.textContent = data.humidity + "°C";
