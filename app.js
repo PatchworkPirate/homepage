@@ -3,19 +3,9 @@ import { SerialPort } from "serialport";
 import { ReadlineParser } from "serialport";
 import * as dotenv from "dotenv";
 dotenv.config();
-import pg from "pg";
-const { Client } = pg;
-import http from 'http';
-
-const pgClient = new Client();
-await main();
-async function main() {
-  await pgClient.connect();
-}
 
 let temp = 0;
 let humidity = 0;
-let portPath = "";
 
 const app = express();
 
@@ -27,7 +17,7 @@ app.get("/", function (req, res) {
   res.render("home", { temp: temp, humidity: humidity });
 });
 
-const ports = SerialPort.list().then(function (ports) {
+SerialPort.list().then(function (ports) {
   ports.forEach(function (option) {
     if (option.productId === "805a") {
       const port = new SerialPort({
@@ -44,26 +34,16 @@ const ports = SerialPort.list().then(function (ports) {
         data = JSON.parse(data);
         temp = data.temperature;
         humidity = data.humidity;
-        pgClient.query(
-          "INSERT INTO readings (temp, humidity) VALUES ($1, $2);",
-          [temp, humidity],
-          function (err) {
-            err ? console.log(err) : null;
-          }
-        );
       });
     }
   });
 });
 
 app.get("/api", function (req, res) {
-  pgClient.query(
-    `SELECT * FROM readings ORDER BY timestamp DESC LIMIT 1;`,
-    function (err, dbres) {
-      err && res.send(err);
-      res.send(dbres.rows[0]);
-    }
-  );
+  res.send({
+    temp: temp,
+    humidity: humidity,
+  });
 });
 
 app.listen(4000, function () {
